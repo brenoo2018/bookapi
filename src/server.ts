@@ -14,7 +14,7 @@ const port = 3333
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 database.connect()
-app.use('/', userRoutes)
+app.use('/user', userRoutes)
 app.use(
 	(error: Error, request: Request, response: Response, next: NextFunction) => {
 		if (error instanceof Error) {
