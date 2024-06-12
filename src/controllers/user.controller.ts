@@ -1,7 +1,13 @@
 import { NextFunction, Request, Response } from 'express'
-import { hash } from 'bcrypt'
+import { compare, hash } from 'bcrypt'
 import { User } from '../models'
 import { UserRepository } from '../repositories/user.repository'
+import { log } from 'console'
+
+type TUpdateData = {
+	name: string
+	password: string
+}
 
 export class UserController {
 	private userRepository: UserRepository
@@ -26,7 +32,15 @@ export class UserController {
 			next(error)
 		}
 	}
-	show(request: Request, response: Response, next: NextFunction) {}
+	async show(request: Request, response: Response, next: NextFunction) {
+		const { id } = request.params
+		try {
+			const result = await this.userRepository.findById(id)
+			return response.json(result)
+		} catch (error) {
+			next(error)
+		}
+	}
 	async store(request: Request, response: Response, next: NextFunction) {
 		const { name, email, password } = request.body
 		try {
@@ -48,5 +62,34 @@ export class UserController {
 			next(error)
 		}
 	}
-	update(request: Request, response: Response, next: NextFunction) {}
+	async update(request: Request, response: Response, next: NextFunction) {
+		const { id } = request.params
+		const { name, password, oldPassword } = request.body
+		try {
+			const findUser = await this.userRepository.findById(id)
+			if (!findUser) {
+				throw new Error('User not found')
+			}
+
+			if (password && oldPassword && findUser.password) {
+				const passwordMatch = await compare(oldPassword, findUser.password)
+
+				if (!passwordMatch) {
+					throw new Error('password does not match')
+				}
+
+				const hashPaswword = await hash(password, 10)
+				await this.userRepository.updatePassword(id, hashPaswword)
+			}
+
+			if (name) {
+				await this.userRepository.updateName(id, name)
+			}
+
+			return response.json({ message: 'Update sucessfully' })
+		} catch (error) {
+			console.log('🚀 ~ UserController ~ update ~ error:', error)
+			next(error)
+		}
+	}
 }
