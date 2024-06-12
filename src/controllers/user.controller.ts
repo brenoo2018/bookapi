@@ -8,7 +8,24 @@ export class UserController {
 	constructor() {
 		this.userRepository = new UserRepository()
 	}
-	index(request: Request, response: Response, next: NextFunction) {}
+	async index(request: Request, response: Response, next: NextFunction) {
+		const { page, size } = request.query
+
+		const DEFAULT_PAGE = 1
+		const DEFAULT_SIZE = 1
+		const pageNumber = page ? parseInt(page as string, 10) : DEFAULT_PAGE
+		const sizeNumber = size ? parseInt(size as string, 10) : DEFAULT_SIZE
+		try {
+			const result = await this.userRepository.findAll({
+				page: pageNumber,
+				size: sizeNumber,
+			})
+
+			return response.json(result)
+		} catch (error) {
+			next(error)
+		}
+	}
 	show(request: Request, response: Response, next: NextFunction) {}
 	async store(request: Request, response: Response, next: NextFunction) {
 		const { name, email, password } = request.body

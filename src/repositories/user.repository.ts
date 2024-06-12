@@ -6,6 +6,11 @@ type TCreate = {
 	password: string
 }
 
+type TPage = {
+	page: number
+	size: number
+}
+
 export class UserRepository {
 	async findByEmail(email: string) {
 		const result = await User.findOne({ email })
@@ -17,6 +22,13 @@ export class UserRepository {
 			email,
 			password,
 		})
+		return result
+	}
+	async findAll({ page, size }: TPage) {
+		const result = await User.find()
+			.skip((page - 1) * size)
+			.limit(size)
+			.exec()
 		return result
 	}
 }
