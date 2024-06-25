@@ -92,4 +92,18 @@ export class UserController {
 			next(error)
 		}
 	}
+	async delete(request: Request, response: Response, next: NextFunction) {
+		const { id } = request.params
+		try {
+			const findUser = await this.userRepository.findById(id)
+			if (!findUser) {
+				throw new Error('User not found')
+			}
+
+			const result = await this.userRepository.delete(id)
+			return response.json(result)
+		} catch (error) {
+			next(error)
+		}
+	}
 }

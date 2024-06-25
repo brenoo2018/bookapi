@@ -18,6 +18,10 @@ export class UserRoutes {
 			'/:id',
 			this.userController.update.bind(this.userController)
 		)
+		this.router.delete(
+			'/:id',
+			this.userController.delete.bind(this.userController)
+		)
 
 		return this.router
 	}

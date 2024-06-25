@@ -6,7 +6,7 @@ export class DbConnection {
 			await mongoose.connect(process.env.DATABASE_URL!)
 			console.log('Database connected')
 		} catch (error) {
-			console.error('Error to connect database')
+			console.error('Error to connect database', error)
 		}
 	}
 }

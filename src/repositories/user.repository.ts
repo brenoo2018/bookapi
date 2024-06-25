@@ -41,4 +41,7 @@ export class UserRepository {
 	async updateName(id: string, name: string) {
 		await User.findByIdAndUpdate(id, { name })
 	}
+	async delete(id: string) {
+		return await User.findByIdAndDelete(id)
+	}
 }
