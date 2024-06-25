@@ -3,11 +3,13 @@ import dotenv from 'dotenv'
 
 import { UserRoutes } from './routes/user.routes'
 import { DbConnection } from './database'
+import { BookRoutes } from './routes/books.routes'
 
 dotenv.config()
 
 const app: Application = express()
 const userRoutes = new UserRoutes().getRoutes()
+const bookRoutes = new BookRoutes().getRoutes()
 const database = new DbConnection()
 const port = 3333
 
@@ -15,6 +17,8 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 database.connect()
 app.use('/user', userRoutes)
+app.use('/books', bookRoutes)
+
 app.use(
 	(error: Error, request: Request, response: Response, next: NextFunction) => {
 		if (error instanceof Error) {
