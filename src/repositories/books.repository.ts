@@ -11,6 +11,13 @@ type TCreateBook = {
 	user_id: string
 }
 
+type TUpdateBook = {
+	id: string
+	read: boolean
+	dateRead: Date
+	rate: number
+}
+
 export class BooksRepository {
 	async create({
 		name,
@@ -64,5 +71,12 @@ export class BooksRepository {
 	}
 	delete(id: string) {
 		return Books.findByIdAndDelete({ _id: id }).exec()
+	}
+	async update({ id, read, dateRead, rate }: TUpdateBook) {
+		await Books.findByIdAndUpdate(id, {
+			read,
+			dateRead,
+			rate,
+		})
 	}
 }

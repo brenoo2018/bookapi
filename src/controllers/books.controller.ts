@@ -81,6 +81,38 @@ export class BooksController {
 			next(error)
 		}
 	}
+	async update(request: Request, response: Response, next: NextFunction) {
+		const { id } = request.params
+		const { user_id } = request
+		const { rate } = request.body
+
+		try {
+			if (!rate) {
+				throw new Error('Rate is required')
+			}
+
+			if (rate < 0 || rate > 5) {
+				throw new Error('Rate must be a number between 0 and 5')
+			}
+
+			const findById = await this.booksRepository.findById(id, user_id)
+
+			if (!findById || findById.length <= 0) {
+				throw new Error('Book not found')
+			}
+
+			const result = await this.booksRepository.update({
+				id,
+				read: true,
+				dateRead: new Date(),
+				rate,
+			})
+
+			return response.json(result).status(200)
+		} catch (error) {
+			next(error)
+		}
+	}
 }
 
 class StringFormatter {
