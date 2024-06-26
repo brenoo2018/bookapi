@@ -56,4 +56,13 @@ export class BooksRepository {
 
 		return result
 	}
+	findById(id: string, user_id: string) {
+		return Books.find({
+			_id: id,
+			user_id,
+		}).exec()
+	}
+	delete(id: string) {
+		return Books.findByIdAndDelete({ _id: id }).exec()
+	}
 }

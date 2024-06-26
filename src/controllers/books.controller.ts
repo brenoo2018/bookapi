@@ -40,7 +40,7 @@ export class BooksController {
 				user_id: request.user_id,
 			})
 
-			// return response.json(result).status(201)
+			return response.json(result).status(201)
 		} catch (error) {
 			next(error)
 		}
@@ -60,6 +60,22 @@ export class BooksController {
 				page: pageAsNumber,
 				limit: sizeAsNumber,
 			})
+			return response.json(result).status(200)
+		} catch (error) {
+			next(error)
+		}
+	}
+	async delete(request: Request, response: Response, next: NextFunction) {
+		const { id } = request.params
+		const { user_id } = request
+		try {
+			const findById = await this.booksRepository.findById(id, user_id)
+
+			if (!findById || findById.length <= 0) {
+				throw new Error('Book not found')
+			}
+
+			const result = await this.booksRepository.delete(id)
 			return response.json(result).status(200)
 		} catch (error) {
 			next(error)

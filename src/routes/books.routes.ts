@@ -24,6 +24,11 @@ export class BookRoutes {
 			this.authMiddleware.auth.bind(this.authMiddleware),
 			this.bookController.index.bind(this.bookController)
 		)
+		this.router.delete(
+			'/:id',
+			this.authMiddleware.auth.bind(this.authMiddleware),
+			this.bookController.delete.bind(this.bookController)
+		)
 		return this.router
 	}
 }
