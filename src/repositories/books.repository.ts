@@ -40,4 +40,20 @@ export class BooksRepository {
 
 		return result
 	}
+	async findByUserIdPaginate({
+		user_id,
+		page,
+		limit,
+	}: {
+		user_id: string
+		page: number
+		limit: number
+	}) {
+		const result = await Books.find({ user_id })
+			.skip((page - 1) * limit)
+			.limit(limit)
+			.exec()
+
+		return result
+	}
 }

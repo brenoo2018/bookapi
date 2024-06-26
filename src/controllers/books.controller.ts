@@ -45,6 +45,26 @@ export class BooksController {
 			next(error)
 		}
 	}
+	async index(request: Request, response: Response, next: NextFunction) {
+		const { user_id } = request
+		const { page, size } = request.query
+
+		const DEFAULT_PAGE = 1
+		const DEFAULT_SIZE = 1
+		try {
+			const pageAsNumber = page ? Number(page) : DEFAULT_PAGE
+			const sizeAsNumber = size ? Number(size) : DEFAULT_SIZE
+
+			const result = await this.booksRepository.findByUserIdPaginate({
+				user_id,
+				page: pageAsNumber,
+				limit: sizeAsNumber,
+			})
+			return response.json(result).status(200)
+		} catch (error) {
+			next(error)
+		}
+	}
 }
 
 class StringFormatter {
