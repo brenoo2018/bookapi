@@ -5,7 +5,7 @@ type TCreateBook = {
 	author: string
 	company: string
 	read: boolean
-	dateRead: Date
+	dateRead: Date | null
 	description: string
 	rate: number
 	user_id: string

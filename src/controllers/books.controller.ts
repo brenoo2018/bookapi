@@ -11,11 +11,9 @@ export class BooksController {
 			request.body
 		const { user_id } = request
 		try {
+			const readVerify = read ? true : false
+			const dateReadVerify = dateRead ? new Date(dateRead) : null
 			const findBooksByUserId = await this.booksRepository.findByUserId(user_id)
-			console.log(
-				'🚀 ~ BooksController ~ store ~ findBooksByUserId:',
-				findBooksByUserId
-			)
 
 			const findBooks = findBooksByUserId.find(
 				(book, index) =>
@@ -27,16 +25,20 @@ export class BooksController {
 				throw new Error('Book already exists')
 			}
 
-			// const result = await this.booksRepository.create({
-			// 	name,
-			// 	author,
-			// 	company,
-			// 	read,
-			// 	dateRead,
-			// 	description,
-			// 	rate,
-			// 	user_id: request.user_id,
-			// })
+			if (!readVerify && rate) {
+				throw new Error('You can grade only books that have been read')
+			}
+
+			const result = await this.booksRepository.create({
+				name,
+				author,
+				company,
+				read: readVerify,
+				dateRead: dateReadVerify,
+				description,
+				rate,
+				user_id: request.user_id,
+			})
 
 			// return response.json(result).status(201)
 		} catch (error) {
