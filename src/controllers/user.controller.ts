@@ -41,6 +41,7 @@ export class UserController {
 			next(error)
 		}
 	}
+
 	async store(request: Request, response: Response, next: NextFunction) {
 		const { name, email, password } = request.body
 		try {
@@ -57,7 +58,7 @@ export class UserController {
 				password: hashPaswword,
 			})
 
-			return response.json(createUser)
+			return response.json(createUser).status(201)
 		} catch (error) {
 			next(error)
 		}
