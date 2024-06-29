@@ -13,7 +13,7 @@ const app: Application = express()
 const userRoutes = new UserRoutes().getRoutes()
 const bookRoutes = new BookRoutes().getRoutes()
 const database = new DbConnection()
-const port = 3333
+const port = process.env.PORT || 3333
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
